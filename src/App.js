@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ItemList from './ItemList';
+import ItemDetail from './ItemDetail';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <header style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
+          <h1>在庫管理システム</h1>
+        </header>
+        <main style={{ padding: '20px' }}>
+          <Routes>
+            <Route path="/" element={<ItemList />} />
+            <Route path="/detail/:code" element={<ItemDetail />} />
+            <Route path="*" element={
+              <div style={{ textAlign: 'center', padding: '50px' }}>
+                <h2>ページが見つかりません</h2>
+                <p>お探しのページは存在しません。</p>
+              </div>
+            } />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
