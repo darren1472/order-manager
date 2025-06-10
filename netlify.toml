@@ -1,0 +1,7 @@
+# netlify.toml
+
+[build]
+  # ルート直下でビルドを実行
+  command = "npm run build"
+  # 出力された build フォルダを公開
+  publish = "build"
