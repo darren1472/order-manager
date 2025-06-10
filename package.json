@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "description": "発注管理システム - Google Apps Scriptと連携したReactアプリケーション",
-  "author": "Your Name",
   "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
@@ -18,9 +17,9 @@
     "analyze": "npm run build && npx webpack-bundle-analyzer build/static/js/*.js"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
