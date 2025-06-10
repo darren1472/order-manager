@@ -5,15 +5,10 @@
   "description": "発注管理システム - Google Apps Scriptと連携したReactアプリケーション",
   "author": "Your Name",
   "homepage": ".",
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1",
-    "react-scripts": "5.0.1"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "node copy-redirects.js",
     "test": "react-scripts test --watchAll=false",
     "test:watch": "react-scripts test",
     "eject": "react-scripts eject",
@@ -21,6 +16,12 @@
     "lint:fix": "eslint src --ext .js,.jsx --fix",
     "preview": "npm run build && npx serve -s build",
     "analyze": "npm run build && npx webpack-bundle-analyzer build/static/js/*.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.1",
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.4",
