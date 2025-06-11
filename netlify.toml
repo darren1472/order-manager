@@ -1,7 +1,29 @@
-# netlify.toml
+# netlify.toml（リポジトリ直下に置く）
 
 [build]
-  # ルート直下でビルドを実行
-  command = "npm run build"
-  # 出力された build フォルダを公開
-  publish = "build"
+  command   = "npm run build"
+  publish   = "build"
+  functions = "netlify/functions"
+
+# ─── APIリクエストをサーバーレス関数に転送 ───
+[[redirects]]
+  from   = "/api"
+  to     = "/.netlify/functions/api"
+  status = 200
+
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/api/:splat"
+  status = 200
+
+# ─── 静的ファイルはそのまま返す ───
+[[redirects]]
+  from   = "/*.*"
+  to     = "/*"
+  status = 200
+
+# ─── その他はすべて index.html（SPA フォールバック） ───
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
