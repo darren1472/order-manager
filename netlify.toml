@@ -1,10 +1,10 @@
 # netlify.toml (プロジェクトルート直下)
+
 [build]
   command   = "npm run build"
   publish   = "build"
   functions = "netlify/functions"
 
-# ── API リクエストをサーバーレス関数へ ──
 [[redirects]]
   from   = "/api"
   to     = "/.netlify/functions/api"
@@ -15,13 +15,11 @@
   to     = "/.netlify/functions/api/:splat"
   status = 200
 
-# ── 静的ファイルはそのまま返す ──
 [[redirects]]
   from   = "/*.*"
   to     = "/*"
   status = 200
 
-# ── その他はすべて index.html（SPA フォールバック） ──
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
