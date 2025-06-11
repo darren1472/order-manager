@@ -1,1 +1,9 @@
-/*    /index.html   200
+# 「/api」 もしくは 「/api/**」 はすべてサーバーレス関数へ流す
+/api    /.netlify/functions/api    200
+/api/*  /.netlify/functions/api/:splat  200
+
+# 静的ファイルはそのまま返す
+/*.*   /*   200
+
+# それ以外はすべて index.html（SPA フォールバック）
+/*     /index.html  200
