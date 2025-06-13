@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/order-manager/static/css/main.710176af.css",
-    "main.js": "/order-manager/static/js/main.40e3f846.js",
+    "main.js": "/order-manager/static/js/main.1821fcc3.js",
     "index.html": "/order-manager/index.html",
     "main.710176af.css.map": "/order-manager/static/css/main.710176af.css.map",
-    "main.40e3f846.js.map": "/order-manager/static/js/main.40e3f846.js.map"
+    "main.1821fcc3.js.map": "/order-manager/static/js/main.1821fcc3.js.map"
   },
   "entrypoints": [
     "static/css/main.710176af.css",
-    "static/js/main.40e3f846.js"
+    "static/js/main.1821fcc3.js"
   ]
 }
