@@ -1,9 +1,10 @@
-# public/_redirects (build 時にコピーされます)
-# API リクエストをサーバーレス関数へ
+# public/_redirects (ビルド時にコピーされます)
+
+# APIリクエストをサーバーレス関数に転送
 /api    /.netlify/functions/api    200
 /api/*  /.netlify/functions/api/:splat  200
 
-# 静的ファイルはそのまま返す
+# 静的ファイルはそのまま配信
 /*.*   /*   200
 
 # それ以外は index.html（SPA フォールバック）

@@ -2,220 +2,106 @@
 // ---------------------------------
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { listItems } from './api';     // ★ 追加：GAS 直呼びラッパー
 
-const API = '/api';           // proxy 経由で GAS に到達する
-const CODE_KEY = '商品ID';    // スプレッドシートの列タイトルと一致させる
-const NAME_KEY = '商品名';
+const CODE_KEY  = '商品ID';          // スプレッドシートの列タイトル
+const NAME_KEY  = '商品名';
 const ORDER_KEY = 'ケース発注数';
 
 export default function ItemList() {
-  const [items, setItems] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems]   = useState([]);
+  const [error, setError]   = useState(null);
+  const [loading, setLoad]  = useState(true);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  // 詳細画面から渡される「確定した商品ID」がある場合にハイライトする
+  const navigate  = useNavigate();
+  const location  = useLocation();
   const confirmedCode = location.state?.confirmedCode || null;
 
+  /* ---------- データ取得 ---------- */
   const fetchItems = useCallback(async () => {
     try {
-      setLoading(true);
+      setLoad(true);
       setError(null);
-      
-      const response = await fetch(`${API}?dummy=${Date.now()}`); // キャッシュ回避
-      
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-      }
-      
-      const json = await response.json();
-      console.log('GASから返ってきたデータ:', json)
-      
-      if (json.status !== 'success') {
-        throw new Error(json.message || 'API呼び出しに失敗しました');
-      }
-      
-      if (!Array.isArray(json.data)) {
-        throw new Error('データの形式が正しくありません');
-      }
-      
-      // _confirmed フラグをつけた配列を生成
+
+      const json = await listItems();               // ★ ここだけ置き換え
+
+      if (json.status !== 'success' || !Array.isArray(json.data))
+        throw new Error(json.message || 'API応答が不正です');
+
       const newItems = json.data.map(item => ({
         ...item,
         _confirmed: item[CODE_KEY] === confirmedCode
       }));
-      
+
       setItems(newItems);
     } catch (err) {
       console.error('ItemList fetch error:', err);
       setError(err.message || 'データの取得に失敗しました');
     } finally {
-      setLoading(false);
+      setLoad(false);
     }
   }, [confirmedCode]);
 
-  useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+  useEffect(() => { fetchItems(); }, [fetchItems]);
 
-  const handleItemClick = useCallback((code) => {
-    navigate(`/detail/${code}`);
-  }, [navigate]);
+  /* ---------- 各種ハンドラ ---------- */
+  const handleItemClick = (code) => navigate(`/detail/${code}`);
+  const handleRetry     = () => fetchItems();
 
-  const handleRetry = useCallback(() => {
-    fetchItems();
-  }, [fetchItems]);
+  /* ---------- 描画 ---------- */
+  if (loading) return <p style={{ padding:16,textAlign:'center' }}>読み込み中...</p>;
 
-  if (loading) {
-    return (
-      <div style={{ padding: 16, textAlign: 'center' }}>
-        <div>読み込み中...</div>
-      </div>
-    );
-  }
+  if (error) return (
+    <div style={{ padding:16 }}>
+      <div style={{ color:'red', marginBottom:16 }}>エラー: {error}</div>
+      <button onClick={handleRetry} style={btn}>再試行</button>
+    </div>
+  );
 
-  if (error) {
-    return (
-      <div style={{ padding: 16 }}>
-        <div style={{ color: 'red', marginBottom: 16 }}>
-          エラー: {error}
-        </div>
-        <button 
-          onClick={handleRetry}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            cursor: 'pointer'
-          }}
-        >
-          再試行
-        </button>
-      </div>
-    );
-  }
-
-  if (items.length === 0) {
-    return (
-      <div style={{ padding: 16, textAlign: 'center' }}>
-        <div>商品データがありません</div>
-        <button 
-          onClick={handleRetry}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            cursor: 'pointer',
-            marginTop: 16
-          }}
-        >
-          再読み込み
-        </button>
-      </div>
-    );
-  }
+  if (items.length === 0) return (
+    <div style={{ padding:16, textAlign:'center' }}>
+      <div>商品データがありません</div>
+      <button onClick={handleRetry} style={{ ...btn, marginTop:16 }}>再読み込み</button>
+    </div>
+  );
 
   return (
-    <div style={{ padding: 16 }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: 16
-      }}>
+    <div style={{ padding:16 }}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
         <h2>発注管理表（{new Date().toLocaleDateString()}）</h2>
-        <button 
-          onClick={handleRetry}
-          style={{
-            padding: '6px 12px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          更新
-        </button>
+        <button onClick={handleRetry} style={{ ...btn, background:'#6c757d', fontSize:14 }}>更新</button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
         {items.map(item => {
-          const code = item[CODE_KEY];
-          const name = item[NAME_KEY];
-          const orderCount = item[ORDER_KEY];
+          const code        = item[CODE_KEY];
+          const name        = item[NAME_KEY];
+          const orderCount  = item[ORDER_KEY];
           const isConfirmed = item._confirmed;
 
-          // 必要なデータが不足している場合のハンドリング
-          if (!code) {
-            console.warn('商品IDが不足している項目:', item);
-            return null;
-          }
+          if (!code) return null;  // 必須データ欠落
 
           return (
-            <div
-              key={code}
+            <div key={code}
               onClick={() => handleItemClick(code)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleItemClick(code);
-                }
-              }}
-              tabIndex={0}
-              role="button"
-              aria-label={`商品 ${name || code} の詳細を表示`}
+              onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')handleItemClick(code)}}
+              tabIndex={0} role="button"
+              aria-label={`商品 ${name||code} の詳細を表示`}
               style={{
-                cursor: 'pointer',
-                padding: 12,
-                border: '1px solid #ccc',
-                borderRadius: 8,
-                backgroundColor: isConfirmed ? '#e8f5e8' : '#ffffff',
-                transition: 'all 0.2s ease',
-                outline: 'none',
-                boxShadow: isConfirmed ? '0 2px 4px rgba(0,128,0,0.1)' : 'none'
+                cursor:'pointer', padding:12, border:'1px solid #ccc', borderRadius:8,
+                background:isConfirmed? '#e8f5e8' : '#fff',
+                transition:'all .2s', outline:'none',
+                boxShadow:isConfirmed? '0 2px 4px rgba(0,128,0,.1)' : 'none'
               }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = isConfirmed ? '#d4edda' : '#f8f9fa';
-                e.target.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = isConfirmed ? '#e8f5e8' : '#ffffff';
-                e.target.style.transform = 'translateY(0)';
-              }}
-              onFocus={(e) => {
-                e.target.style.boxShadow = '0 0 0 2px #007bff';
-              }}
-              onBlur={(e) => {
-                e.target.style.boxShadow = isConfirmed ? '0 2px 4px rgba(0,128,0,0.1)' : 'none';
-              }}
+              onMouseEnter={e=>{e.currentTarget.style.background=isConfirmed? '#d4edda':'#f8f9fa'}}
+              onMouseLeave={e=>{e.currentTarget.style.background=isConfirmed? '#e8f5e8':'#fff'}}
+              onFocus     ={e=>{e.currentTarget.style.boxShadow='0 0 0 2px #007bff'}}
+              onBlur      ={e=>{e.currentTarget.style.boxShadow=isConfirmed?'0 2px 4px rgba(0,128,0,.1)':'none'}}
             >
-              {isConfirmed && (
-                <div style={{ 
-                  color: '#28a745', 
-                  fontWeight: 'bold', 
-                  fontSize: '12px',
-                  marginBottom: 4
-                }}>
-                  ✓ 確定済み
-                </div>
-              )}
-              <div style={{ fontWeight: '500' }}>
-                📦 商品コード: {code}
-              </div>
-              <div style={{ margin: '4px 0' }}>
-                📋 商品名: {name || '未設定'}
-              </div>
-              <div>
-                📦 ケース発注数: {orderCount ?? '未設定'} ケース
-              </div>
+              {isConfirmed && <div style={{color:'#28a745',fontWeight:'bold',fontSize:12,marginBottom:4}}>✓ 確定済み</div>}
+              <div style={{ fontWeight:500 }}>📦 商品コード: {code}</div>
+              <div style={{ margin:'4px 0' }}>📋 商品名: {name || '未設定'}</div>
+              <div>📦 ケース発注数: {orderCount ?? '未設定'} ケース</div>
             </div>
           );
         })}
@@ -223,3 +109,13 @@ export default function ItemList() {
     </div>
   );
 }
+
+/* ---------- 汎用ボタンスタイル ---------- */
+const btn = {
+  padding:'8px 16px',
+  background:'#007bff',
+  color:'#fff',
+  border:'none',
+  borderRadius:4,
+  cursor:'pointer'
+};
