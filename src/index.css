@@ -1,7 +1,14 @@
-/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==== 独自カスタム ==== */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #fafafa;
+  @apply bg-gray-100 text-gray-900;
+  font-size: 20px;          /* 全体フォントをやや大きく */
+}
+
+/* React logo を回転させたい場合など */
+.logo-spin {
+  @apply animate-spin;
 }
