@@ -2,13 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ==== 独自カスタム ==== */
+/* ===== グローバルカスタム ===== */
 body {
-  @apply bg-gray-100 text-gray-900;
-  font-size: 20px;          /* 全体フォントをやや大きく */
+  /* フォント & 配色（老眼向けに 20 px） */
+  @apply font-rounded text-gray-900 text-[20px];
+
+  /* 画面いっぱいのやさしいグラデーション背景 */
+  @apply bg-gradient-to-b from-blue-200 to-rose-100;
 }
 
-/* React logo を回転させたい場合など */
+/* React のロゴを回転させたいときなど */
 .logo-spin {
   @apply animate-spin;
 }

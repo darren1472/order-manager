@@ -8,9 +8,11 @@ function App() {
   return (
     <Router>
       <div>
+        
+
         {/* ─── ヘッダー ─── */}
         <header style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
-          <h1>在庫管理システム</h1>
+          {/* <h1>在庫管理システム</h1> */}
         </header>
 
         {/* ─── メインルーティング ─── */}

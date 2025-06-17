@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta charset="UTF-8" />
+    <!-- Google Fonts（丸ゴシック）-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ▼ 追加① : PWA のマニフェストを読み込む -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- ▼ 追加② : テーマカラー（通知バーなどに適用）-->
+    <meta name="theme-color" content="#f7931e" />
+
+    <!-- ▼ 追加③ : お好みでファビコンも指定 -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>order-manager</title>
+    <title>在庫管理システム</title>
   </head>
   <body>
+    <noscript>このアプリは JavaScript を必要とします。</noscript>
     <div id="root"></div>
   </body>
 </html>

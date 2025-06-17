@@ -61,7 +61,7 @@ export default function ItemDetail() {
   if (!item) return <p className="p-6">読み込み中…</p>;
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white shadow rounded-xl">
+    <div className="p-6 max-w-md mx-auto bg-white rounded-xl2 shadow-card">
       {/* 見出し ------------------------------------------------ */}
       <h2 className="text-2xl font-bold text-sky-700 mb-6 border-b pb-2">
         商品詳細
@@ -88,33 +88,35 @@ export default function ItemDetail() {
           onChange={e => setStock(e.target.value)}
           placeholder="0"
           className="
-            w-36 text-center
+            w-36 text-center text-xl tracking-wider
             border-2 border-gray-400 rounded-lg
-            focus:border-sky-500 focus:ring-sky-500
-            px-3 py-2 text-xl tracking-wider
+            focus:border-primary focus:ring-primary
+            px-3 py-2
           "
         />
       </label>
 
       {/* 操作ボタン ------------------------------------------ */}
       <div className="flex gap-4 text-center">
+        {/* 保存 */}
         <button
           onClick={handleSave}
           className="
-            flex-1 py-3 bg-sky-600 text-white text-lg font-semibold rounded-lg
-            hover:bg-sky-700 active:bg-sky-800
-            focus:outline-none focus:ring-2 focus:ring-sky-400
+            flex-1 py-3 bg-primary text-white text-lg font-semibold rounded-lg
+            hover:bg-primary/90 active:bg-primary/80
+            focus:outline-none focus:ring-2 focus:ring-primary/50
           "
         >
           保存
         </button>
 
+        {/* キャンセル */}
         <button
           onClick={() => navigate("/")}
           className="
-            flex-1 py-3 bg-gray-400 text-white text-lg font-semibold rounded-lg
-            hover:bg-gray-500 active:bg-gray-600
-            focus:outline-none focus:ring-2 focus:ring-gray-500
+            flex-1 py-3 bg-danger text-white text-lg font-semibold rounded-lg
+            hover:bg-danger/90 active:bg-danger/80
+            focus:outline-none focus:ring-2 focus:ring-danger/50
           "
         >
           キャンセル
