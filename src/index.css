@@ -7,8 +7,8 @@ body {
   /* フォント & 配色（老眼向けに 20 px） */
   @apply font-rounded text-gray-900 text-[20px];
 
-  /* 画面いっぱいのやさしいグラデーション背景 */
-  @apply bg-gradient-to-b from-blue-200 to-rose-100;
+  /* 背景色 */
+  @apply bg-white;
 }
 
 /* React のロゴを回転させたいときなど */
