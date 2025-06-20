@@ -64,7 +64,7 @@ export default function ItemList() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-200 to-rose-100 pb-16">
+    <div className="min-h-screen bg-white pb-16">
       {/* 固定ヘッダー */}
       <header className="bg-primary text-white text-xl font-bold py-3 px-4 shadow-card sticky top-0 z-40">
         在庫管理システム
